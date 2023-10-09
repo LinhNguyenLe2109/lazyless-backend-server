@@ -38,14 +38,14 @@ app.get("/", async (req, res) => {
 app.get("/taskType/:taskType", async (req, res) => {
   const type = req.params.taskType.toUpperCase();
   let db = await DailyTask.find({ taskType: type });
-  res.send(db);
+  res.json(db);
 });
 
 // get a task based on id
 app.get("/task/:id", async (req, res) => {
   try {
     let db = await DailyTask.findOne({ id: req.params.id });
-    res.send(db);
+    res.json(db);
   } catch (err) {
     throw new Error(
       "There is something wrong with the GET /task/:id request. Err: " + err
@@ -63,7 +63,7 @@ app.post("/addTask", async (req, res) => {
       completed: false,
     });
     await task.save();
-    res.send(task);
+    res.json(task);
   } catch (err) {
     throw new Error(
       "There is something wrong with the POST /addTask request. Err: " + err
@@ -92,7 +92,7 @@ app.put("/updateTask/:id", async (req, res) => {
       task.setCompleted(completed);
     }
     await task.save();
-    res.send(task);
+    res.json(task);
   } catch (err) {
     throw new Error("There is something wrong with the PUT request");
   }
@@ -103,7 +103,7 @@ app.delete("/deleteTask/:id", async (req, res) => {
   try {
     let task = await DailyTask.findOne({ id: req.params.id });
     await DailyTask.deleteMany({ id: req.params.id });
-    res.send(task);
+    res.json(task);
   } catch (err) {
     throw new Error("There is something wrong with the DELETE request");
   }
