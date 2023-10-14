@@ -16,7 +16,7 @@ const dailyTaskSchema = new Schema({
     type: String,
     required: true,
   },
-  competed: {
+  completed: {
     type: Boolean,
     required: true,
     default: false,

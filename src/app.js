@@ -11,11 +11,8 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
 
-
 app.use(bodyParser.json());
 app.use(cors());
-
-
 
 // test application
 testFile.env();
@@ -44,6 +41,7 @@ app.get("/taskType/:taskType", async (req, res) => {
 // get a task based on id
 app.get("/task/:id", async (req, res) => {
   try {
+    console.log(req.params.id);
     let db = await DailyTask.findOne({ id: req.params.id });
     res.json(db);
   } catch (err) {
