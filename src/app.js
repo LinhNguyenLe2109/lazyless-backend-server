@@ -86,7 +86,7 @@ app.put("/updateTask/:id", async (req, res) => {
       }
       task.setTaskType(taskType);
     }
-    if (completed) {
+    if (completed != null) {
       task.setCompleted(completed);
     }
     await task.save();
