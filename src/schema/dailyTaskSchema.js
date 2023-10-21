@@ -21,6 +21,10 @@ const dailyTaskSchema = new Schema({
     required: true,
     default: false,
   },
+  parentTableId: {
+    type: String,
+    required: true,
+  },
 });
 
 // do I even need this or I can just set the values directly?
