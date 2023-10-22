@@ -39,18 +39,45 @@ router.get("/count", async (req, res) => {
 
 // add a daily table
 router.post("/add", async (req, res) => {
+  // Check if table already exists
+  const targetDate = new Date();
+
+  // Create a range for the entire day of the target date
+  const startOfDay = new Date(targetDate);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date(targetDate);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  let existingTable;
+
   try {
-    const dailyTable = new DailyTable({
-      id: uuidv4(),
-      taskIdList: [],
-      date: new Date(),
-      completedAll: false,
-      completedRate: 0,
+    existingTable = await DailyTable.findOne({
+      date: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
     });
-    const savedDailyTable = await dailyTable.save();
-    res.json(savedDailyTable);
   } catch (err) {
     res.json({ message: err });
+  }
+  if (!existingTable) {
+    //add new table
+    try {
+      const dailyTable = new DailyTable({
+        id: uuidv4(),
+        taskIdList: [],
+        date: new Date(),
+        completedAll: false,
+        completedRate: 0,
+      });
+      const savedDailyTable = await dailyTable.save();
+      res.json(savedDailyTable);
+    } catch (err) {
+      res.json({ message: err });
+    }
+  } else {
+    res.json(null);
   }
 });
 
@@ -72,17 +99,19 @@ router.put("/:tableID/addTask/:taskID", async (req, res) => {
 // delete a daily table
 router.delete("/delete/:id", async (req, res) => {
   try {
-    let dailyTable = await DailyTable.findById(req.params.id);
+    let dailyTable = await DailyTable.findOne({
+      id: req.params.id,
+    });
     if (!dailyTable) {
       res.json({ message: "This daily table does not exist" });
     }
     for (let i = 0; i < dailyTable.taskIdList.length; i++) {
       await DailyTask.deleteOne({ id: dailyTable.taskIdList[i] });
     }
-    const removedDailyTable = await DailyTable.remove({ id: req.params.id });
+    const removedDailyTable = await DailyTable.deleteOne({ id: req.params.id });
     res.json(removedDailyTable);
   } catch (err) {
-    res.json({ message: err });
+    res.json({ message: "Something is wrong here with /delete" });
   }
 });
 

@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/dailyTable', require('./routes/dailyTable'));
+app.use('/dailyTable', require('./routes/dailyTableAPI'));
 
 // test application
 testFile.env();
