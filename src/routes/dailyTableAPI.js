@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 // get a daily table based on id
 router.get("/:id", async (req, res) => {
   try {
-    const dailyTable = await DailyTable.findById(req.params.id);
+    const dailyTable = await DailyTable.findOne({ id: req.params.id });
     res.json(dailyTable);
   } catch (err) {
     res.json({ message: err });
