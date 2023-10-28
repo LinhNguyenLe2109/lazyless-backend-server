@@ -1,11 +1,12 @@
 const express = require("express");
-const router = express.Router();
 const DailyTable = require("../schema/dailyTableSchema");
 const DailyTask = require("../schema/dailyTaskSchema");
 const { v4: uuidv4 } = require("uuid");
 
+const router = express.Router();
+
 // direct to daily task API
-router.use("/:tableID/dailyTask", require("./dailyTaskAPI.js"));
+router.use("/:tableID/dailyTask", require("./dailyTaskAPI"));
 
 // get all daily tables
 router.get("/", async (req, res) => {

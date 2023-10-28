@@ -1,8 +1,9 @@
 const express = require("express");
-const router = express.Router();
 const DailyTask = require("../schema/dailyTaskSchema");
 const { v4: uuidv4 } = require("uuid");
 
+// allow access to parent params
+const router = express.Router({ mergeParams: true });
 // route definitions
 // all routes have access to tableID from the URL in dailyTableAPI.js
 
@@ -10,7 +11,7 @@ const { v4: uuidv4 } = require("uuid");
 router.get("/", async (req, res) => {
   try {
     let db = await DailyTask.find({ parentTableId: req.params.tableID });
-    res.send(db);
+    res.json(db);
   } catch (err) {
     throw new Error(
       "There is something wrong with the GET / request. Err: " + err
