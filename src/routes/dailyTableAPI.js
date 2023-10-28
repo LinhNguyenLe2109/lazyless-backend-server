@@ -11,7 +11,7 @@ router.use("/:tableID/dailyTask", require("./dailyTaskAPI"));
 // get all daily tables
 router.get("/", async (req, res) => {
   try {
-    const dailyTable = await DailyTable.find();
+    const dailyTable = await DailyTable.find().sort({ date: -1 });
     res.json(dailyTable);
   } catch (err) {
     res.json({ message: err });
