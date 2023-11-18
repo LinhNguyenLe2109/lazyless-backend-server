@@ -43,12 +43,13 @@ passport.use(strategy);
 app.use(passport.initialize({ session: false }));
 
 // Router configuration
-app.use("/dailyTable", require("./routes/dailyTableAPI"));
+app.use(
+  "/dailyTable",
+  passport.authenticate("jwt"),
+  require("./routes/dailyTableAPI")
+);
 
 // App routes
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 app.post("/login", async (req, res) => {
   if (req.body.userName && req.body.password) {
