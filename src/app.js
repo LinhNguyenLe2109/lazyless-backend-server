@@ -89,7 +89,7 @@ app.post("/register", async (req, res) => {
           password: password,
         });
         const savedUser = await newUser.save();
-        res.json(savedUser);
+        res.json({ message: "ok", user: { userName: savedUser.userName } });
       }
     } catch (err) {
       res.status(401).json({ message: "Error registering user" });
