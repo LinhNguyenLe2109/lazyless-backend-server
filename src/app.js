@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
 const User = require("./schema/userSchema");
+const { v4: uuidv4 } = require("uuid");
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -87,12 +88,14 @@ app.post("/register", async (req, res) => {
           id: uuidv4(),
           userName: userName,
           password: password,
+          dailyTableList: [],
         });
         const savedUser = await newUser.save();
+
         res.json({ message: "ok", user: { userName: savedUser.userName } });
       }
     } catch (err) {
-      res.status(401).json({ message: "Error registering user" });
+      res.status(401).json({ message: "Error registering user", err: err });
     }
   }
 });
