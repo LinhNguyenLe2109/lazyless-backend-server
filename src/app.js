@@ -41,12 +41,12 @@ const strategy = new JwtStrategy(jwtOptions, async (jwt_payload, next) => {
 passport.use(strategy);
 
 // Passport initialization
-app.use(passport.initialize({ session: false }));
+app.use(passport.initialize());
 
 // Router configuration
 app.use(
   "/dailyTable",
-  passport.authenticate("jwt"),
+  passport.authenticate("jwt", { session: false }),
   require("./routes/dailyTableAPI")
 );
 

@@ -28,6 +28,10 @@ const dailyTableSchema = new Schema({
     required: true,
     default: 0,
   },
+  userID: {
+    type: String,
+    required: true,
+  },
 });
 
 const DailyTable = mongoose.model("dailyTable", dailyTableSchema);

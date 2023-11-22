@@ -11,7 +11,10 @@ router.use("/:tableID/dailyTask", require("./dailyTaskAPI"));
 // get all daily tables
 router.get("/", async (req, res) => {
   try {
-    const dailyTable = await DailyTable.find().sort({ date: -1 });
+    const userID = req.user.id;
+    const dailyTable = await DailyTable.find({ userID: userID }).sort({
+      date: -1,
+    });
     res.json(dailyTable);
   } catch (err) {
     res.json({ message: err });
@@ -31,8 +34,7 @@ router.get("/:id", async (req, res) => {
 // get a number of daily tables
 router.get("/count", async (req, res) => {
   try {
-    const dailyTableCount = await DailyTable.countDocuments();
-    res.json({ num: dailyTableCount });
+    res.json({ num: req.user.dailyTableList.length });
   } catch (err) {
     res.json({ message: err });
   }
@@ -58,6 +60,7 @@ router.post("/add", async (req, res) => {
         $gte: startOfDay,
         $lte: endOfDay,
       },
+      userID: req.user.id,
     });
   } catch (err) {
     res.json({ message: err });
@@ -71,6 +74,7 @@ router.post("/add", async (req, res) => {
         date: new Date(),
         completedAll: false,
         completedRate: 0,
+        userID: req.user.id,
       });
       const savedDailyTable = await dailyTable.save();
       res.json(savedDailyTable);
