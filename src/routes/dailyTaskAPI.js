@@ -1,5 +1,6 @@
 const express = require("express");
 const DailyTask = require("../schema/dailyTaskSchema");
+const DailyTable = require("../schema/dailyTableSchema");
 const { v4: uuidv4 } = require("uuid");
 
 // allow access to parent params
@@ -85,6 +86,21 @@ router.put("/updateTask/:id", async (req, res) => {
       task.setTaskType(taskType);
     }
     if (completed != null) {
+      // check if current stat is the same like the new stat
+      if (completed !== task.completed) {
+        let parentTable = await DailyTable.findOne({ id: task.parentTableId });
+        if (completed) {
+          parentTable.completedTaskNum += 1;
+        } else {
+          parentTable.completedTaskNum -= 1;
+        }
+        // Check if all task are completed
+        if (parentTable.completedTaskNum === parentTable.taskIdList.length) {
+          parentTable.completedAll = true;
+        } else {
+          parentTable.completedAll = false;
+        }
+      }
       task.setCompleted(completed);
     }
     await task.save();

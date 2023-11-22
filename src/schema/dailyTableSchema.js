@@ -23,7 +23,7 @@ const dailyTableSchema = new Schema({
     required: true,
     default: false,
   },
-  completedRate: {
+  completedTaskNum: {
     type: Number,
     required: true,
     default: 0,
