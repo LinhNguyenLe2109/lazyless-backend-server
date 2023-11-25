@@ -50,6 +50,12 @@ app.use(
   require("./routes/dailyTableAPI")
 );
 
+app.use(
+  "/dailyLog",
+  passport.authenticate("jwt", { session: false }),
+  require("./routes/dailyLogAPI")
+);
+
 // App routes
 
 app.post("/login", async (req, res) => {

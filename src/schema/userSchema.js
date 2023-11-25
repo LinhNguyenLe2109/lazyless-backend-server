@@ -21,6 +21,11 @@ const userSchema = new Schema({
     required: true,
     default: [],
   },
+  dailyLogList:{
+    type: [String],
+    required: true,
+    default: [],
+  }
 });
 
 const User = mongoose.model("user", userSchema);

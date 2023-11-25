@@ -68,15 +68,23 @@ router.post("/add", async (req, res) => {
   if (!existingTable) {
     //add new table
     try {
+      // Create a new daily table object
+      const dailyTableID = uuidv4();
       const dailyTable = new DailyTable({
-        id: uuidv4(),
+        id: dailyTableID,
         taskIdList: [],
         date: new Date(),
         completedAll: false,
         completedRate: 0,
         userID: req.user.id,
       });
+      // Save the daily table object
       const savedDailyTable = await dailyTable.save();
+      // Add the daily table id to the user's daily table list
+      await User.updateOne(
+        { id: req.user.id },
+        { $push: { dailyTableList: dailyTableID } }
+      );
       res.json(savedDailyTable);
     } catch (err) {
       res.json({ message: err });
