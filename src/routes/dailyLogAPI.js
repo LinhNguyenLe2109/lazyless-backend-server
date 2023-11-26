@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
     });
     res.json(dailyLogList);
   } catch (err) {
-    res.json({ message: err });
+    throw new Error(err);
   }
 });
 
@@ -24,7 +24,7 @@ router.get("/:id", async (req, res) => {
     const dailyLog = await DailyLog.findOne({ id: req.params.id });
     res.json(dailyLog);
   } catch (err) {
-    res.json({ message: err });
+    throw new Error(err);
   }
 });
 
@@ -51,7 +51,7 @@ router.post("/add", async (req, res) => {
       userID: req.user.id,
     });
   } catch (err) {
-    res.json({ message: err });
+    throw new Error(err);
   }
   // if the daily log already exists, return err
   if (existingLog) {
@@ -75,7 +75,7 @@ router.post("/add", async (req, res) => {
       );
       res.json(savedDailyLog);
     } catch (err) {
-      res.json({ message: err });
+      throw new Error(err);
     }
   }
 });
@@ -96,7 +96,7 @@ router.post("/:id/addTask", async (req, res) => {
     const savedDailyLog = await dailyLog.save();
     res.json(savedDailyLog);
   } catch (err) {
-    res.json({ message: err });
+    throw new Error(err);
   }
 });
 
@@ -130,7 +130,7 @@ router.put("/:id/updateTask", async (req, res) => {
     const savedDailyLog = await dailyLog.save();
     res.json(savedDailyLog);
   } catch (err) {
-    res.json({ message: err });
+    throw new Error(err);
   }
 });
 
@@ -146,7 +146,7 @@ router.delete("/:id/deleteTask/:taskID", async (req, res) => {
     const savedDailyLog = await dailyLog.save();
     res.json(savedDailyLog);
   } catch (err) {
-    res.json({ message: err });
+    throw new Error(err);
   }
 });
 
@@ -168,9 +168,8 @@ router.delete("/delete/:id", async (req, res) => {
     );
     res.json({ completed: true });
   } catch (err) {
-    res.json({ message: err });
+    throw new Error(err);
   }
 });
-
 
 module.exports = router;
