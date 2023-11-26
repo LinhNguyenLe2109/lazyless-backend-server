@@ -101,12 +101,12 @@ router.post("/:id/addTask", async (req, res) => {
 });
 
 // update a task in a daily log
-router.put("/:id/updateTask/:taskID", async (req, res) => {
+router.put("/:id/updateTask", async (req, res) => {
   try {
     const dailyLog = await DailyLog.findOne({ id: req.params.id });
     const dailyLogTaskList = dailyLog.dailyLogTaskList;
     // Find the task to be updated
-    const task = dailyLogTaskList.find((task) => task.id === req.params.taskID);
+    const task = dailyLogTaskList.find((task) => task.id === req.body.id);
     // Remove the task to be updated from the task list
     const newDailyLogTaskList = dailyLogTaskList.filter(
       (task) => task.id !== req.params.taskID
