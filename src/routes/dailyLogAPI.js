@@ -58,8 +58,9 @@ router.post("/add", async (req, res) => {
     throw new Error({ message: "Log already exists" });
   } else {
     // Create a new log
+    const dailyLogID = uuidv4();
     const dailyLog = new DailyLog({
-      id: uuidv4(),
+      id: dailyLogID,
       date: targetDate,
       userID: req.user.id,
       dailyLogTaskList: [],

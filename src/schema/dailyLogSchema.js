@@ -43,6 +43,7 @@ const dailyLogSchema = new Schema({
     ],
     required: true,
     default: [],
+    unique: false,
   },
   userID: {
     type: String,
@@ -51,6 +52,5 @@ const dailyLogSchema = new Schema({
 });
 
 const DailyLogSchema = mongoose.model("dailyLog", dailyLogSchema);
-
 
 module.exports = DailyLogSchema;
