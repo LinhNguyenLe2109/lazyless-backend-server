@@ -42,7 +42,7 @@ const dailyLogSchema = new Schema({
   dailyLogTaskList: {
     type: [dailyLogTaskSchema],
     required: true,
-    default: [],
+    default: undefined,
   },
   userID: {
     type: String,

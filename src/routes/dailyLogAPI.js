@@ -63,7 +63,7 @@ router.post("/add", async (req, res) => {
       id: dailyLogID,
       date: targetDate,
       userID: req.user.id,
-      dailyLogTaskList: [],
+      dailyLogTaskList: undefined,
     });
 
     try {
@@ -93,6 +93,7 @@ router.post("/:id/addTask", async (req, res) => {
       taskType: req.body.taskType,
       note: req.body.note,
     };
+    dailyLog.dailyLogTaskList = dailyLog.dailyLogTaskList || [];
     dailyLog.dailyLogTaskList.push(newTask);
     const savedDailyLog = await dailyLog.save();
     res.json(savedDailyLog);
