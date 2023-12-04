@@ -5,6 +5,8 @@ const User = require("../schema/userSchema");
 
 const router = express.Router();
 
+router.use("/:tableID/task", require("./dailyLogTaskAPI"));
+
 // get all daily logs
 router.get("/", async (req, res) => {
   try {
@@ -63,7 +65,7 @@ router.post("/add", async (req, res) => {
       id: dailyLogID,
       date: targetDate,
       userID: req.user.id,
-      dailyLogTaskList: undefined,
+      dailyLogTaskList: [],
     });
 
     try {
@@ -78,77 +80,6 @@ router.post("/add", async (req, res) => {
     } catch (err) {
       throw new Error(err);
     }
-  }
-});
-
-// add a task to a daily log
-router.post("/:id/addTask", async (req, res) => {
-  try {
-    const dailyLog = await DailyLog.findOne({ id: req.params.id });
-    const newTask = {
-      id: uuidv4(),
-      taskName: req.body.taskName,
-      startTime: req.body.startTime,
-      endTime: req.body.endTime,
-      taskType: req.body.taskType,
-      note: req.body.note,
-    };
-    dailyLog.dailyLogTaskList = dailyLog.dailyLogTaskList || [];
-    dailyLog.dailyLogTaskList.push(newTask);
-    const savedDailyLog = await dailyLog.save();
-    res.json(savedDailyLog);
-  } catch (err) {
-    throw new Error(err);
-  }
-});
-
-// update a task in a daily log
-router.put("/:id/updateTask", async (req, res) => {
-  try {
-    const dailyLog = await DailyLog.findOne({ id: req.params.id });
-    const dailyLogTaskList = dailyLog.dailyLogTaskList;
-    // Find the task to be updated
-    const task = dailyLogTaskList.find((task) => task.id === req.body.id);
-    // Remove the task to be updated from the task list
-    const newDailyLogTaskList = dailyLogTaskList.filter(
-      (task) => task.id !== req.params.taskID
-    );
-    if (req.body.taskName && req.body.taskName !== "") {
-      task.taskName = req.body.taskName;
-    }
-    if (req.body.startTime && typeof req.body.startTime == Date) {
-      task.startTime = req.body.startTime;
-    }
-    if (req.body.endTime && typeof req.body.endTime == Date) {
-      task.endTime = req.body.endTime;
-    }
-    if (req.body.taskType && req.body.taskType !== "") {
-      task.taskType = req.body.taskType;
-    }
-    task.note = req.body.note;
-    // Add the updated task back to the task list
-    newDailyLogTaskList.push(task);
-    dailyLog.dailyLogTaskList = newDailyLogTaskList;
-    const savedDailyLog = await dailyLog.save();
-    res.json(savedDailyLog);
-  } catch (err) {
-    throw new Error(err);
-  }
-});
-
-// Delete a task from a daily log
-router.delete("/:id/deleteTask/:taskID", async (req, res) => {
-  try {
-    const dailyLog = await DailyLog.findOne({ id: req.params.id });
-    const dailyLogTaskList = dailyLog.dailyLogTaskList;
-    const newDailyLogTaskList = dailyLogTaskList.filter(
-      (task) => task.id !== req.params.taskID
-    );
-    dailyLog.dailyLogTaskList = newDailyLogTaskList;
-    const savedDailyLog = await dailyLog.save();
-    res.json(savedDailyLog);
-  } catch (err) {
-    throw new Error(err);
   }
 });
 
