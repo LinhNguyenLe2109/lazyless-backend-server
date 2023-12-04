@@ -41,7 +41,6 @@ const dailyLogSchema = new Schema({
   },
   dailyLogTaskList: {
     type: [dailyLogTaskSchema],
-    required: true,
     default: undefined,
   },
   userID: {
