@@ -40,19 +40,19 @@ router.post("/add", async (req, res) => {
   const endOfDay = new Date(targetDate);
   endOfDay.setHours(23, 59, 59, 999);
 
-  let existingLog;
+  let existingLog = false;
   // Check if the daily log already exists
-  try {
-    existingLog = await DailyLog.findOne({
-      date: {
-        $gte: startOfDay,
-        $lt: endOfDay,
-      },
-      userID: req.user.id,
-    });
-  } catch (err) {
-    throw new Error(err);
-  }
+  // try {
+  //   existingLog = await DailyLog.findOne({
+  //     date: {
+  //       $gte: startOfDay,
+  //       $lt: endOfDay,
+  //     },
+  //     userID: req.user.id,
+  //   });
+  // } catch (err) {
+  //   throw new Error(err);
+  // }
   // if the daily log already exists, return err
   if (existingLog) {
     throw new Error({ message: "Log already exists" });
