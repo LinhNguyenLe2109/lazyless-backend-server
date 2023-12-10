@@ -26,7 +26,7 @@ router.post("/addTask", async (req, res) => {
       parentLogId: req.params.tableID,
     });
     // Create a new task
-    const newTask = {
+    const newTask = new DailyLogTask({
       id: uuidv4(),
       taskName: req.body.taskName,
       startTime: req.body.startTime,
@@ -34,13 +34,13 @@ router.post("/addTask", async (req, res) => {
       taskType: req.body.taskType,
       note: req.body.note,
       parentLogId: req.params.id,
-    };
+    });
     // Add the task ID to the daily log
     dailyLog.dailyLogTaskList.push(newTask.id);
     // Save the daily log
     await dailyLog.save();
     // Save the task
-    const savedDailyLogTask = await new DailyLogTask(newTask).save();
+    const savedDailyLogTask = await newTask.save();
     // Return the saved task
     res.json(savedDailyLogTask);
   } catch (err) {
