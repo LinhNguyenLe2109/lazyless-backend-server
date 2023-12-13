@@ -25,7 +25,6 @@ router.post("/addTask", async (req, res) => {
     const dailyLog = await DailyLog.findOne({
       parentLogId: req.params.tableID,
     });
-    console.log(req.body);
     // Create a new task
     const newTask = new DailyLogTask({
       id: uuidv4(),
@@ -34,7 +33,7 @@ router.post("/addTask", async (req, res) => {
       endTime: req.body.endTime,
       taskType: req.body.taskType,
       note: req.body.note,
-      parentLogId: req.params.id,
+      parentLogId: req.params.tableID,
     });
     // Add the task ID to the daily log
     dailyLog.dailyLogTaskList.push(newTask.id);
