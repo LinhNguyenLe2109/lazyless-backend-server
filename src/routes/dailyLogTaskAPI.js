@@ -25,6 +25,7 @@ router.post("/addTask", async (req, res) => {
     const dailyLog = await DailyLog.findOne({
       parentLogId: req.params.tableID,
     });
+    console.log("TableID: " + req.params.tableID);
     // Create a new task
     const newTask = new DailyLogTask({
       id: uuidv4(),
@@ -35,12 +36,12 @@ router.post("/addTask", async (req, res) => {
       note: req.body.note,
       parentLogId: req.params.tableID,
     });
+    // Save the task
+    const savedDailyLogTask = await newTask.save();
     // Add the task ID to the daily log
     dailyLog.dailyLogTaskList.push(newTask.id);
     // Save the daily log
     await dailyLog.save();
-    // Save the task
-    const savedDailyLogTask = await newTask.save();
     // Return the saved task
     res.json(savedDailyLogTask);
   } catch (err) {
@@ -85,20 +86,18 @@ router.delete("/deleteTask/:id", async (req, res) => {
     const dailyLog = await DailyLog.findOne({
       id: req.params.tableID,
     });
-    // find the task
-    const task = await DailyLogTask.findOne({
+    // Delete the task
+    const deletedTask = await DailyLogTask.deleteOne({
       id: req.params.id,
+      parentLogId: req.params.tableID,
     });
+    // Remove the task ID from the daily log
     const dailyLogTaskList = dailyLog.dailyLogTaskList;
     const newDailyLogTaskList = dailyLogTaskList.filter(
       (id) => id !== req.params.id
     );
     dailyLog.dailyLogTaskList = newDailyLogTaskList;
     await dailyLog.save();
-    const deletedTask = await task.deleteOne({
-      id: req.params.id,
-      parentLogId: req.params.tableID,
-    });
     res.json(deletedTask);
   } catch (err) {
     throw new Error(err);
