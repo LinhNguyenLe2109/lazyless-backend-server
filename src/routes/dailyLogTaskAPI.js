@@ -23,7 +23,7 @@ router.post("/addTask", async (req, res) => {
   try {
     // Check if table already exists
     const dailyLog = await DailyLog.findOne({
-      parentLogId: req.params.tableID,
+      id: req.params.tableID,
     });
     // Create a new task
     const newTask = new DailyLogTask({
