@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const DailyLog = require("../schema/dailyLogSchema");
 const DailyLogTask = require("../schema/dailyLogTaskSchema");
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.get("/", async (req, res) => {
   try {
@@ -25,7 +25,6 @@ router.post("/addTask", async (req, res) => {
     const dailyLog = await DailyLog.findOne({
       parentLogId: req.params.tableID,
     });
-    console.log("TableID: " + req.params.tableID);
     // Create a new task
     const newTask = new DailyLogTask({
       id: uuidv4(),
