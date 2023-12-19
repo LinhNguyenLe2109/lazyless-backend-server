@@ -68,6 +68,7 @@ router.post("/addTask", async (req, res) => {
 // Update a task
 router.put("/updateTask/:id", async (req, res) => {
   try {
+    // Find the task
     let task = await DailyTask.findOne({
       id: req.params.id,
       parentTableId: req.params.tableID,
@@ -100,6 +101,7 @@ router.put("/updateTask/:id", async (req, res) => {
         } else {
           parentTable.completedAll = false;
         }
+        await parentTable.save();
       }
       task.setCompleted(completed);
     }

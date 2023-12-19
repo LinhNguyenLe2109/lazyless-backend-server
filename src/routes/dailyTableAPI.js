@@ -75,7 +75,7 @@ router.post("/add", async (req, res) => {
         taskIdList: [],
         date: new Date(),
         completedAll: false,
-        completedRate: 0,
+        completedTaskNum: 0,
         userID: req.user.id,
       });
       // Save the daily table object
