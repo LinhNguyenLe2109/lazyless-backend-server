@@ -86,13 +86,15 @@ router.post("/add", async (req, res) => {
 // Delete a daily log
 router.delete("/delete/:id", async (req, res) => {
   try {
-    const dailyLog = await DailyLog.findOne({ id: req.params.id });
-    if (!dailyLog) {
+    const result = await DailyLog.deleteOne({ id: req.params.id });
+    if (!result) {
       res.json({ message: "This daily log does not exist" });
     }
-    const result = await DailyLog.deleteOne({ id: req.params.id });
     if (result.deletedCount != 1) {
       res.json({ message: "This daily log was found but not deleted" });
+    }
+    for (let i = 0; i < result.dailyLogTaskList.length; i++) {
+      await DailyLogTask.deleteOne({ id: result.dailyLogTaskList[i] });
     }
     // Remove the daily log id from the user's dailyLogList
     User.updateOne(
