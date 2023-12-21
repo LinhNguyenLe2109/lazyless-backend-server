@@ -2,6 +2,7 @@ const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const DailyLog = require("../schema/dailyLogSchema");
 const User = require("../schema/userSchema");
+const DailyLogTask = require("../schema/dailyLogTaskSchema");
 
 const router = express.Router();
 
@@ -99,7 +100,7 @@ router.delete("/delete/:id", async (req, res) => {
     // Remove the daily log id from the user's dailyLogList
     User.updateOne(
       { id: req.user.id },
-      { $pull: { dailyLogList: req.params.id } }
+      { $pull: { dailyLogList: result.id } }
     );
     res.json({ completed: true });
   } catch (err) {
