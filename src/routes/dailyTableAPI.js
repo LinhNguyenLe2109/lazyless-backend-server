@@ -94,21 +94,6 @@ router.post("/add", async (req, res) => {
   }
 });
 
-// add a task into the table array
-router.put("/:tableID/addTask/:taskID", async (req, res) => {
-  const result = await DailyTable.updateOne(
-    { id: req.params.tableID },
-    { $push: { taskIdList: req.params.taskID } }
-  );
-  if (result.n != 1) {
-    res.json({ message: "This daily table does not exist" });
-  }
-  if (result.nModified != 1) {
-    res.json({ message: "This daily table was found but not updated" });
-  }
-  res.json({ completed: true });
-});
-
 // delete a daily table
 router.delete("/delete/:id", async (req, res) => {
   try {
@@ -122,6 +107,10 @@ router.delete("/delete/:id", async (req, res) => {
       await DailyTask.deleteOne({ id: dailyTable.taskIdList[i] });
     }
     const removedDailyTable = await DailyTable.deleteOne({ id: req.params.id });
+    await User.updateOne(
+      { id: req.user.id },
+      { $pull: { dailyTableList: req.params.id } }
+    );
     res.json(removedDailyTable);
   } catch (err) {
     res.json({ message: "Something is wrong here with /delete" });
