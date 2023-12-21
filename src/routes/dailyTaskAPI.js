@@ -57,6 +57,9 @@ router.post("/addTask", async (req, res) => {
       parentTableId: req.params.tableID,
     });
     await task.save();
+    let parentTable = await DailyTable.findOne({ id: req.params.tableID });
+    parentTable.taskIdList.push(task.id);
+    await parentTable.save();
     res.json(task);
   } catch (err) {
     throw new Error(
@@ -115,15 +118,19 @@ router.put("/updateTask/:id", async (req, res) => {
 // Delete a task
 router.delete("/deleteTask/:id", async (req, res) => {
   try {
-    let task = await DailyTask.findOne({
-      id: req.params.id,
-      parentTableId: req.params.tableID,
-    });
-    await DailyTask.deleteOne({
+    let task = await DailyTask.deleteOne({
       id: req.params.id,
       parentTableId: req.params.tableID,
     });
     res.json(task);
+    let parentTable = await DailyTable.findOne({ id: req.params.tableID });
+    parentTable.taskIdList = parentTable.taskIdList.filter(
+      (taskID) => taskID !== req.params.id
+    );
+    if (task.completed) {
+      parentTable.completedTaskNum -= 1;
+    }
+    await parentTable.save();
   } catch (err) {
     throw new Error("There is something wrong with the DELETE request");
   }
