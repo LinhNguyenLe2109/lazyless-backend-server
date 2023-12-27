@@ -94,7 +94,7 @@ router.delete("/delete/:id", async (req, res) => {
     if (result.deletedCount != 1) {
       res.json({ message: "This daily log was found but not deleted" });
     }
-    if (result.dailyLogTaskList.length > 0) {
+    if (result.dailyLogTaskList?.length > 0) {
       for (let i = 0; i < result.dailyLogTaskList.length; i++) {
         await DailyLogTask.deleteOne({ id: result.dailyLogTaskList[i] });
       }
