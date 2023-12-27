@@ -94,14 +94,14 @@ router.delete("/delete/:id", async (req, res) => {
     if (result.deletedCount != 1) {
       res.json({ message: "This daily log was found but not deleted" });
     }
-    for (let i = 0; i < result.dailyLogTaskList.length; i++) {
-      await DailyLogTask.deleteOne({ id: result.dailyLogTaskList[i] });
+    if (result.dailyLogTaskList.length > 0) {
+      for (let i = 0; i < result.dailyLogTaskList.length; i++) {
+        await DailyLogTask.deleteOne({ id: result.dailyLogTaskList[i] });
+      }
     }
+
     // Remove the daily log id from the user's dailyLogList
-    User.updateOne(
-      { id: req.user.id },
-      { $pull: { dailyLogList: result.id } }
-    );
+    User.updateOne({ id: req.user.id }, { $pull: { dailyLogList: result.id } });
     res.json({ completed: true });
   } catch (err) {
     throw new Error(err);
