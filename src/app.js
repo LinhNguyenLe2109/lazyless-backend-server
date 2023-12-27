@@ -13,12 +13,7 @@ const User = require("./schema/userSchema");
 const { v4: uuidv4 } = require("uuid");
 
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: ["https://linhnguyenle2109.github.io", "http://localhost:5000"],
-    methods: "GET,HEAD,PUT,PATCH,DELETE",
-  })
-);
+app.use(cors());
 
 // Passport configuration
 let ExtractJwt = passportJWT.ExtractJwt;
