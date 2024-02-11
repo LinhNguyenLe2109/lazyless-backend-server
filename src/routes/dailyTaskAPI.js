@@ -130,6 +130,11 @@ router.delete("/deleteTask/:id", async (req, res) => {
     if (task.completed) {
       parentTable.completedTaskNum -= 1;
     }
+    if (parentTable.completedTaskNum === parentTable.taskIdList.length) {
+      parentTable.completedAll = true;
+    } else {
+      parentTable.completedAll = false;
+    }
     await parentTable.save();
   } catch (err) {
     throw new Error("There is something wrong with the DELETE request");
