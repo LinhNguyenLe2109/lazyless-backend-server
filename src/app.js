@@ -12,8 +12,12 @@ const passportJWT = require("passport-jwt");
 const User = require("./schema/userSchema");
 const { v4: uuidv4 } = require("uuid");
 
+const corsOptions={
+  origin: ["http://localhost:4200", "https://lazyless.vercel.app"]
+}
+
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Passport configuration
 let ExtractJwt = passportJWT.ExtractJwt;
@@ -105,6 +109,10 @@ app.post("/register", async (req, res) => {
     }
   }
 });
+
+app.get("/", async(req, res)=>{
+  res.send("Hello world");
+})
 
 // test application
 testFile.env();
